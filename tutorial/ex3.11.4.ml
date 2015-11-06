@@ -1,3 +1,5 @@
+open String
+
 (* ASCIIコードが最も大きい文字を返す *)
 let max_ascii (str) = 
     let rec max_ascii_iter (n, max) =
