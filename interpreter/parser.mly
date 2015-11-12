@@ -25,6 +25,7 @@ Expr :
   | LTExpr  { $1 }
   | LogExpr { $1 }
   | FunExpr { $1 }
+  | AppExpr { $1 }
 
 LTExpr : 
     PExpr LT PExpr { BinOp (Lt, $1, $3) }
