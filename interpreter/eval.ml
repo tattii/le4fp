@@ -60,7 +60,7 @@ let rec eval_exp env = function
           | _ -> err ("Non-function value is applied"))
   | LetRecExp (id, para, exp1, exp2) ->
       let dummyenv = ref Environment.empty in
-      let newenv = Environment.extend id (ProcV (para, exp1, dummyenv)) env in
+      let newenv = Environment.extend id (ProcV (para, exp1, !dummyenv)) env in
         dummyenv := newenv;
         eval_exp newenv exp2
 
@@ -68,3 +68,9 @@ let eval_decl env = function
     Exp e -> let v = eval_exp env e in ("-", env, v)
   | Decl (id, e) ->
       let v = eval_exp env e in (id, Environment.extend id v env, v)
+  | RecDecl (id, para, e) ->
+      let dummyenv = ref Environment.empty in
+      let v = ProcV (para, e, !dummyenv) in
+      let newenv = Environment.extend id v env in
+        dummyenv := newenv;
+        (id, newenv, v)
