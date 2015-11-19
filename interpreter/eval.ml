@@ -67,8 +67,7 @@ let rec eval_exp env = function
         eval_exp newenv exp2
 
 let eval_decl env = function
-    Exp e -> let v = eval_exp env e in ("-", env, v)
-  | Decl (id, e) ->
+    Decl (id, e) ->
       let v = eval_exp env e in (id, Environment.extend id v env, v)
   | RecDecl (id, para, e) ->
       let dummyenv = ref Environment.empty in
@@ -76,3 +75,13 @@ let eval_decl env = function
       let newenv = Environment.extend id v env in
         dummyenv := newenv;
         (id, newenv, v)
+
+let rec eval_decls env = function
+    [] -> []
+  | decl ::rest ->
+      let (id, newenv, v) = eval_decl env decl in
+        (id, newenv, v) :: eval_decls newenv rest
+
+let eval_decl_list env = function
+    Exp e -> let v = eval_exp env e in [("-", env, v)]
+  | DeclList decls -> eval_decls env decls

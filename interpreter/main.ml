@@ -1,16 +1,24 @@
 open Syntax
 open Eval
 
+let print_val (id, v) =
+  Printf.printf "val %s = " id;
+  pp_val v;
+  print_newline()
+
+
 let rec read_eval_print env =
   print_string "# ";
   flush stdout;
   try 
     let decl = Parser.toplevel Lexer.main (Lexing.from_channel stdin) in
-      let (id, newenv, v) = eval_decl env decl in
-        Printf.printf "val %s = " id;
-        pp_val v;
-        print_newline();
-        read_eval_print newenv
+    let decls = eval_decl_list env decl in
+    let rec print_decls env = function
+        [] -> read_eval_print env
+      | (id, newenv, v) :: rest ->
+          print_val (id, v);
+          print_decls newenv rest
+    in print_decls env decls
   with
       Eval.Error e ->
         Printf.printf "[error] Eval error: %s" e;

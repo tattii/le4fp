@@ -14,7 +14,11 @@ type exp =
   | AppExp of exp * exp
   | LetRecExp of id * id * exp * exp
 
-type program = 
-    Exp of exp
+type decl =
   | Decl of id * exp
   | RecDecl of id * id * exp
+
+type program = 
+    Exp of exp
+  | DeclList of decl list 
+
