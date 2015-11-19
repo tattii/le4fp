@@ -6,7 +6,7 @@ open Syntax
 %token PLUS MULT LT AND OR
 %token IF THEN ELSE TRUE FALSE
 %token LET IN EQ
-%token RARROW FUN
+%token RARROW FUN REC
 
 %token <int> INTV
 %token <Syntax.id> ID
@@ -18,14 +18,16 @@ open Syntax
 toplevel :
     Expr SEMISEMI { Exp $1 }
   | LET ID EQ Expr SEMISEMI { Decl ($2, $4) }
+  | LET REC ID EQ Expr SEMISEMI { RecDecl ($3, $5) }
 
 Expr :
-    IfExpr  { $1 }
-  | LetExpr { $1 }
-  | LTExpr  { $1 }
-  | LogExpr { $1 }
-  | FunExpr { $1 }
-  | AppExpr { $1 }
+    IfExpr     { $1 }
+  | LetExpr    { $1 }
+  | LetRecExpr { $1 }
+  | LTExpr     { $1 }
+  | LogExpr    { $1 }
+  | FunExpr    { $1 }
+  | AppExpr    { $1 }
 
 LTExpr : 
     PExpr LT PExpr { BinOp (Lt, $1, $3) }
@@ -57,6 +59,9 @@ AExpr :
 
 LetExpr :
     LET ID EQ Expr IN Expr { LetExp ($2, $4, $6) }
+
+LetRecExpr :
+    LET REC ID EQ Expr IN Expr { LetRecExp ($3, $5, $7) }
 
 IfExpr :
     IF Expr THEN Expr ELSE Expr { IfExp ($2, $4, $6) }
