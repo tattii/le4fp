@@ -80,6 +80,8 @@ let rec eval_exp env = function
                       eval_exp env3 exp2)
           | _ -> err ("it only matches with list"))
    | ListExp l -> (ListV l)
+   | InfixOpExp infix_op ->
+       ProcV ("_x", FunExp ("_y", BinOp (infix_op, Var "_x", Var "_y")), ref env)
 
 let eval_decl env = function
     Decl (id, e) ->

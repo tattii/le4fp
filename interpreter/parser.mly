@@ -68,6 +68,7 @@ AExpr :
   | FALSE { BLit false }
   | ID { Var $1 }
   | LPAREN Expr RPAREN { $2 }
+  | LPAREN InfixOp RPAREN { InfixOpExp ($2) }
 
 LetExpr :
     LET ID EQ Expr IN Expr { LetExp ($2, $4, $6) }
@@ -91,4 +92,9 @@ ListExpr :
 ListElems :
     Expr { [$1] }
   | ListElems SEMI Expr { $1 @ [$3] }
+
+InfixOp :
+    PLUS { Plus }
+  | MINUS { Minus }
+
 
