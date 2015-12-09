@@ -68,6 +68,7 @@ let rec eval_exp env = function
         dummyenv := newenv;
         eval_exp newenv exp2
   | MatchExp (target_exp, exp1, id1, id2, exp2) ->
+      if id1 = id2 then err ("same var for first::rest");
       let target = eval_exp env target_exp in
         (match target with
             ListV l ->
