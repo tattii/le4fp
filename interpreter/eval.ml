@@ -70,14 +70,15 @@ let rec eval_exp env = function
   | MatchExp (target_exp, exp1, id1, id2, exp2) ->
       let target = eval_exp env target_exp in
         (match target with
-            ListV list ->
-              (match list with
+            ListV l ->
+              (match l with
                   [] -> eval_exp env exp1
                 | x :: rest ->
                     let env2 = Environment.extend id1 (eval_exp env x) env in
                     let env3 = Environment.extend id2 (ListV rest) env2 in
                       eval_exp env3 exp2)
           | _ -> err ("it only matches with list"))
+   | ListExp l -> (ListV l)
 
 let eval_decl env = function
     Decl (id, e) ->

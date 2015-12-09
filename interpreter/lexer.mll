@@ -36,6 +36,9 @@ rule main = parse
 | "[]" { Parser.EMPTYLIST }
 | "|"  { Parser.BAR }
 | "::" { Parser.CONS }
+| "["  { Parser.LBRACKET }
+| "]"  { Parser.RBRACKET }
+| ";"  { Parser.SEMI }
 
 | ['a'-'z'] ['a'-'z' '0'-'9' '_' '\'']*
     { let id = Lexing.lexeme lexbuf in

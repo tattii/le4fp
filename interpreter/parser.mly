@@ -8,6 +8,7 @@ open Syntax
 %token LET IN EQ
 %token RARROW FUN REC
 %token MATCH WITH EMPTYLIST BAR CONS
+%token LBRACKET RBRACKET SEMI
 
 %token <int> INTV
 %token <Syntax.id> ID
@@ -37,6 +38,7 @@ Expr :
   | FunExpr    { $1 }
   | AppExpr    { $1 }
   | MatchExpr  { $1 }
+  | ListExpr   { $1 }
 
 LTExpr : 
     PExpr LT PExpr { BinOp (Lt, $1, $3) }
@@ -81,4 +83,12 @@ FunExpr :
 
 MatchExpr :
     MATCH Expr WITH EMPTYLIST RARROW Expr BAR ID CONS ID RARROW Expr { MatchExp ($2, $6, $8, $10, $12) }
+
+ListExpr :
+    EMPTYLIST { ListExp ([]) }
+  | LBRACKET ListElems RBRACKET { ListExp ($2) }
+
+ListElems :
+    Expr { [$1] }
+  | ListElems SEMI Expr { $1 @ [$3] }
 

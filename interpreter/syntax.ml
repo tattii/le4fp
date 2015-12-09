@@ -14,6 +14,7 @@ type exp =
   | AppExp of exp * exp
   | LetRecExp of id * id * exp * exp
   | MatchExp of exp * exp * id * id * exp
+  | ListExp of exp list
 
 type decl =
   | Decl of id * exp
