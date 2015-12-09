@@ -13,6 +13,7 @@ type exp =
   | FunExp of id * exp
   | AppExp of exp * exp
   | LetRecExp of id * id * exp * exp
+  | MatchExp of exp * exp * id * id * exp
 
 type decl =
   | Decl of id * exp

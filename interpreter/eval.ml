@@ -4,6 +4,7 @@ type exval =
     IntV of int
   | BoolV of bool
   | ProcV of id * exp * dnval Environment.t ref
+  | ListV of exp list
 and dnval = exval
 
 exception Error of string
@@ -15,6 +16,7 @@ let rec string_of_exval = function
     IntV i -> string_of_int i
   | BoolV b -> string_of_bool b
   | ProcV _ -> "<fun>"
+  | ListV l -> "list"
 
 let pp_val v = print_string (string_of_exval v)
 
@@ -65,6 +67,17 @@ let rec eval_exp env = function
       let newenv = Environment.extend id (ProcV (para, exp1, dummyenv)) env in
         dummyenv := newenv;
         eval_exp newenv exp2
+  | MatchExp (target_exp, exp1, id1, id2, exp2) ->
+      let target = eval_exp env target_exp in
+        (match target with
+            ListV list ->
+              (match list with
+                  [] -> eval_exp env exp1
+                | x :: rest ->
+                    let env2 = Environment.extend id1 (eval_exp env x) env in
+                    let env3 = Environment.extend id2 (ListV rest) env2 in
+                      eval_exp env3 exp2)
+          | _ -> err ("it only matches with list"))
 
 let eval_decl env = function
     Decl (id, e) ->

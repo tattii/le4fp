@@ -7,6 +7,7 @@ open Syntax
 %token IF THEN ELSE TRUE FALSE
 %token LET IN EQ
 %token RARROW FUN REC
+%token MATCH WITH EMPTYLIST BAR CONS
 
 %token <int> INTV
 %token <Syntax.id> ID
@@ -35,6 +36,7 @@ Expr :
   | LogExpr    { $1 }
   | FunExpr    { $1 }
   | AppExpr    { $1 }
+  | MatchExpr  { $1 }
 
 LTExpr : 
     PExpr LT PExpr { BinOp (Lt, $1, $3) }
@@ -76,4 +78,7 @@ IfExpr :
 
 FunExpr :
     FUN ID RARROW Expr { FunExp ($2, $4) } 
-   
+
+MatchExpr :
+    MATCH Expr WITH EMPTYLIST RARROW Expr BAR ID CONS ID RARROW Expr { MatchExp ($2, $6, $8, $10, $12) }
+
